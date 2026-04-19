@@ -21,6 +21,12 @@ Open: `http://localhost:3000`
 - `GET /api/profile`
 - `GET /api/projects`
 - `POST /api/contact`
+- `GET /api/messages`
+- `GET /api/clients/excel` (downloads latest Excel sheet)
+
+## Auto-updating Excel
+- Every new contact submission automatically updates `data/clients.xlsx`.
+- You can download the latest synced sheet from `/api/clients/excel`.
 
 ## Deploy options
 - Render: `render.yaml` included

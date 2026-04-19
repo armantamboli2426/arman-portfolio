@@ -3,10 +3,12 @@ const helmet = require("helmet");
 const compression = require("compression");
 const fs = require("node:fs/promises");
 const path = require("node:path");
+const XLSX = require("xlsx");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const dataPath = path.join(__dirname, "data", "messages.json");
+const excelPath = path.join(__dirname, "data", "clients.xlsx");
 
 const profile = {
   name: "Arman",
@@ -46,6 +48,30 @@ const projects = [
   },
 ];
 
+const readMessages = async () => {
+  const raw = await fs.readFile(dataPath, "utf8");
+  const parsed = JSON.parse(raw);
+  return Array.isArray(parsed) ? parsed : [];
+};
+
+const writeClientsExcel = async (messages) => {
+  const rows = messages.map((item, index) => ({
+    SrNo: index + 1,
+    ID: item.id || "",
+    Name: item.name || "",
+    Email: item.email || "",
+    ProjectType: item.projectType || "",
+    Message: item.message || "",
+    SubmittedAt: item.createdAt || "",
+  }));
+
+  const worksheet = XLSX.utils.json_to_sheet(rows);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Clients");
+
+  XLSX.writeFile(workbook, excelPath);
+};
+
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(compression());
 app.use(express.json({ limit: "1mb" }));
@@ -65,12 +91,22 @@ app.get("/api/projects", (_req, res) => {
 
 app.get("/api/messages", async (_req, res) => {
   try {
-    const existingRaw = await fs.readFile(dataPath, "utf8");
-    const existing = JSON.parse(existingRaw);
-    return res.json(Array.isArray(existing) ? existing : []);
+    const messages = await readMessages();
+    return res.json(messages);
   } catch (error) {
     console.error("Failed to read messages", error);
     return res.status(500).json({ error: "Unable to read messages right now." });
+  }
+});
+
+app.get("/api/clients/excel", async (_req, res) => {
+  try {
+    const messages = await readMessages();
+    await writeClientsExcel(messages);
+    return res.download(excelPath, "arman-clients.xlsx");
+  } catch (error) {
+    console.error("Failed to export clients excel", error);
+    return res.status(500).json({ error: "Unable to export clients excel right now." });
   }
 });
 
@@ -98,15 +134,14 @@ app.post("/api/contact", async (req, res) => {
   };
 
   try {
-    const existingRaw = await fs.readFile(dataPath, "utf8");
-    const existing = JSON.parse(existingRaw);
-    const next = Array.isArray(existing) ? existing : [];
+    const next = await readMessages();
     next.push(submission);
     await fs.writeFile(dataPath, JSON.stringify(next, null, 2));
+    await writeClientsExcel(next);
 
     return res.status(201).json({
       success: true,
-      message: "Message received. Arman will contact you soon.",
+      message: "Message received. Client sheet updated successfully.",
     });
   } catch (error) {
     console.error("Failed to persist contact submission", error);
@@ -117,6 +152,17 @@ app.post("/api/contact", async (req, res) => {
 app.get("*", (_req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
+
+const syncExcelOnStartup = async () => {
+  try {
+    const messages = await readMessages();
+    await writeClientsExcel(messages);
+  } catch (error) {
+    console.error("Startup excel sync failed", error);
+  }
+};
+
+syncExcelOnStartup();
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
