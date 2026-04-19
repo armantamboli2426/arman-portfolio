@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arman | Video Editor Portfolio</title>
+    <meta
+      name="description"
+      content="Arman is a video editor using Adobe Premiere Pro and After Effects. Explore projects and hire for freelance editing."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=Sora:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="noise" aria-hidden="true"></div>
+    <div class="cursor-glow" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <a href="#top" class="logo">Arman<span>Editor</span></a>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <a href="#contact" class="chip-btn">Hire Me</a>
+    </header>
+
+    <main id="top" class="page-shell">
+      <section class="hero reveal">
+        <p class="eyebrow">Video Editor Portfolio</p>
+        <h1>
+          Trendy edits.
+          <span>Clean storytelling.</span>
+        </h1>
+        <p class="hero-copy" id="introText">
+          Loading profile...
+        </p>
+        <div class="hero-badges">
+          <div class="glass-badge"><strong id="expValue">1+</strong><span>Year Experience</span></div>
+          <div class="glass-badge"><strong>Pr + Ae</strong><span>Editing Toolkit</span></div>
+          <div class="glass-badge"><strong>Diploma</strong><span>Computer Technology</span></div>
+        </div>
+      </section>
+
+      <section id="about" class="about reveal">
+        <div class="section-head">
+          <p>About Arman</p>
+          <h2>From raw clips to final high-retention videos.</h2>
+        </div>
+        <div class="about-grid">
+          <article class="panel lift-card">
+            <h3>Who I Am</h3>
+            <p id="aboutText">
+              I am Arman, a video editor focused on social-media-ready edits.
+            </p>
+          </article>
+          <article class="panel lift-card">
+            <h3>Core Tools</h3>
+            <ul id="toolsList"></ul>
+          </article>
+          <article class="panel lift-card">
+            <h3>Editing Style</h3>
+            <p>
+              Speed ramps, punch-in transitions, motion typography, beat-sync cuts,
+              and polished visual rhythm for reels, promos, and creator content.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="projects" class="projects reveal">
+        <div class="section-head">
+          <p>Featured Projects</p>
+          <h2>Portfolio highlights powered by full-stack data.</h2>
+        </div>
+        <div id="projectsGrid" class="projects-grid"></div>
+      </section>
+
+      <section id="contact" class="contact reveal">
+        <div class="section-head">
+          <p>Contact</p>
+          <h2>Let&apos;s work on your next edit.</h2>
+        </div>
+
+        <form id="contactForm" class="contact-form panel">
+          <label>
+            Name
+            <input type="text" name="name" required placeholder="Your full name" />
+          </label>
+          <label>
+            Email
+            <input type="email" name="email" required placeholder="you@example.com" />
+          </label>
+          <label>
+            Project Type
+            <select name="projectType">
+              <option value="Reels Editing">Reels Editing</option>
+              <option value="Promo Video">Promo Video</option>
+              <option value="Motion Graphics">Motion Graphics</option>
+              <option value="General">General</option>
+            </select>
+          </label>
+          <label>
+            Message
+            <textarea name="message" required rows="4" placeholder="Tell me about your project"></textarea>
+          </label>
+          <button type="submit" class="chip-btn submit-btn">Send Message</button>
+          <p id="formStatus" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
