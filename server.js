@@ -63,6 +63,17 @@ app.get("/api/projects", (_req, res) => {
   res.json(projects);
 });
 
+app.get("/api/messages", async (_req, res) => {
+  try {
+    const existingRaw = await fs.readFile(dataPath, "utf8");
+    const existing = JSON.parse(existingRaw);
+    return res.json(Array.isArray(existing) ? existing : []);
+  } catch (error) {
+    console.error("Failed to read messages", error);
+    return res.status(500).json({ error: "Unable to read messages right now." });
+  }
+});
+
 app.post("/api/contact", async (req, res) => {
   const { name, email, projectType, message } = req.body || {};
 
